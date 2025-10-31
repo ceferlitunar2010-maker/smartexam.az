@@ -1,108 +1,116 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartExam.az - Onlayn Test və İmtahan Platforması</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartExam.az - Onlayn Testlər</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: #f5f7fa;
+      background-color: #f2f6fc;
       color: #333;
     }
+
     header {
       background-color: #2563eb;
       color: white;
       text-align: center;
-      padding: 25px 10px;
+      padding: 20px 10px;
     }
+
     header h1 {
       margin: 0;
       font-size: 2rem;
-      letter-spacing: 1px;
     }
+
     header p {
-      margin-top: 5px;
+      margin: 5px 0 0;
       font-size: 1rem;
     }
+
     nav {
-      background-color: #1e40af;
+      background-color: #1e3a8a;
+      padding: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 20px;
       flex-wrap: wrap;
     }
+
     .nav-links {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
     }
+
     nav a {
       color: white;
       text-decoration: none;
-      margin: 0 12px;
-      font-weight: 500;
-      transition: color 0.3s;
+      margin: 5px 10px;
+      font-weight: bold;
     }
+
     nav a:hover {
       color: #93c5fd;
     }
-    .search-box {
-      margin-top: 10px;
-    }
+
     .search-box input {
-      padding: 7px 10px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 5px;
       border: none;
-      width: 180px;
+      width: 170px;
     }
 
     .hero {
       text-align: center;
-      padding: 50px 20px;
-      background: linear-gradient(to bottom right, #dbeafe, #ffffff);
+      padding: 40px 20px;
+      background: linear-gradient(to right, #dbeafe, #eff6ff);
     }
+
     .hero h2 {
-      font-size: 2rem;
-      color: #1e3a8a;
+      color: #1e40af;
+      margin-bottom: 10px;
     }
+
     .hero p {
-      max-width: 650px;
-      margin: 15px auto;
-      font-size: 1.1rem;
-      color: #555;
+      color: #444;
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .subjects {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 25px;
-      padding: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+      padding: 40px 20px;
     }
+
     .subject-card {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition: transform 0.3s;
     }
+
     .subject-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      transform: translateY(-5px);
     }
+
     .subject-card img {
       width: 100%;
-      height: 150px;
+      height: 140px;
       object-fit: cover;
     }
+
     .subject-card h3 {
-      color: #1e3a8a;
-      margin: 15px 0 5px;
       text-align: center;
+      color: #1e3a8a;
+      margin: 10px 0 5px;
     }
+
     .subject-card p {
       text-align: center;
       color: #555;
@@ -111,16 +119,17 @@
     }
 
     footer {
-      background-color: #1e40af;
+      background-color: #1e3a8a;
       color: white;
       text-align: center;
-      padding: 15px 0;
+      padding: 15px;
       margin-top: 40px;
       font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>SmartExam.az</h1>
     <p>Bilgini sına, gələcəyini formalaşdır!</p>
@@ -135,38 +144,42 @@
       <a href="#">Əlaqə</a>
     </div>
     <div class="search-box">
-      <input type="text" placeholder="Axtarış et..." />
+      <input type="text" placeholder="Axtarış et...">
     </div>
   </nav>
 
   <section class="hero">
-    <h2>Dəyərli Söz: “Elm – insanı ucaldan ən böyük dəyərdir.”</h2>
-    <p>SmartExam.az ilə öyrən, test həll et və biliyini gücləndir! Burada hər fənn üzrə yüzlərlə test səni gözləyir.</p>
+    <h2>“Elm insanın ən güclü silahıdır.”</h2>
+    <p>SmartExam.az ilə test həll et, nəticəni dərhal öyrən və biliyini artır! Elmli gənclər gələcəyin ümididir.</p>
   </section>
 
   <section class="subjects">
     <div class="subject-card">
-      <img src="https://images.pexels.com/photos/414535/pexels-photo-414535.jpeg" alt="Riyaziyyat" />
+      <img src="https://images.pexels.com/photos/414535/pexels-photo-414535.jpeg" alt="Riyaziyyat">
       <h3>Riyaziyyat</h3>
       <p>Riyazi bacarıqlarını yoxla və inkişaf etdir.</p>
     </div>
+
     <div class="subject-card">
-      <img src="https://images.pexels.com/photos/261909/pexels-photo-261909.jpeg" alt="Azərbaycan dili" />
+      <img src="https://images.pexels.com/photos/261909/pexels-photo-261909.jpeg" alt="Azərbaycan dili">
       <h3>Azərbaycan dili</h3>
       <p>Dil biliklərini sına və imtahana hazırlaş.</p>
     </div>
+
     <div class="subject-card">
-      <img src="https://images.pexels.com/photos/159621/book-open-education-literature-159621.jpeg" alt="İngilis dili" />
+      <img src="https://images.pexels.com/photos/159621/book-open-education-literature-159621.jpeg" alt="İngilis dili">
       <h3>İngilis dili</h3>
       <p>Qrammatika və söz ehtiyatını ölç.</p>
     </div>
+
     <div class="subject-card">
-      <img src="https://images.pexels.com/photos/256369/pexels-photo-256369.jpeg" alt="Fizika" />
+      <img src="https://images.pexels.com/photos/256369/pexels-photo-256369.jpeg" alt="Fizika">
       <h3>Fizika</h3>
       <p>Qanunları testlərlə öyrən və yadda saxla.</p>
     </div>
+
     <div class="subject-card">
-      <img src="https://images.pexels.com/photos/346885/pexels-photo-346885.jpeg" alt="Dünya Görüşü" />
+      <img src="https://images.pexels.com/photos/346885/pexels-photo-346885.jpeg" alt="Dünya Görüşü">
       <h3>Dünya Görüşü</h3>
       <p>Ətraf aləm, mədəniyyət və həyat haqqında biliklərini genişləndir.</p>
     </div>
@@ -175,6 +188,6 @@
   <footer>
     © 2025 SmartExam.az | Bütün hüquqlar qorunur.
   </footer>
+
 </body>
 </html>
-
