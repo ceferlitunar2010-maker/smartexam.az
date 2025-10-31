@@ -1,1 +1,136 @@
 
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartExam.az</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Poppins",sans-serif;}
+body{background:linear-gradient(to right,#e0f2fe,#f0f9ff);color:#333;transition:background 2s;}
+.hidden{display:none;}
+header{background:#2563eb;color:white;padding:40px;text-align:center;transition:background 2s;}
+header h1{font-size:3rem;margin-bottom:10px;text-shadow:2px 2px 5px rgba(0,0,0,0.2);}
+header p{font-size:1.3rem;color:#dbeafe;margin-bottom:20px;transition:opacity 1s;}
+button{padding:10px 20px;border:none;border-radius:8px;background:#facc15;color:#1e3a8a;font-weight:bold;cursor:pointer;transition:0.3s;}
+button:hover{background:#eab308;color:white;}
+.subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;justify-items:center;margin-top:20px;}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:0.3s;text-decoration:none;color:#1e3a8a;cursor:pointer;transform:scale(1);}
+.card:hover{transform:scale(1.05) rotate(-2deg);box-shadow:0 10px 25px rgba(0,0,0,0.2);}
+.card img{width:60px;height:60px;margin-bottom:10px;transition:transform 0.3s;}
+.card:hover img{transform:rotate(15deg);}
+input[type=text],input[type=password]{padding:10px 12px;margin:8px;width:220px;border-radius:6px;border:1px solid #ccc;}
+#tests h2{margin-bottom:15px;color:#1e3a8a;}
+ul{list-style:none;padding:0;}
+li{background:white;margin:10px 0;padding:10px;border-radius:8px;transition:0.3s;}
+.correct{background:#bbf7d0;}
+.wrong{background:#fecaca;}
+#progressBar{width:100%;background:#ddd;border-radius:10px;margin:10px 0;}
+#progress{width:0%;height:15px;background:#34d399;border-radius:10px;transition:width 0.5s;}
+#userGreeting{margin-top:10px;color:#1e40af;font-weight:bold;}
+</style>
+</head>
+<body>
+
+<header>
+<h1>SmartExam.az</h1>
+<p id="motivation">"Bilgi gücdür, testlə sınayıb güclən!"</p>
+</header>
+
+<section id="auth">
+<h2>İstifadəçi Qeydiyyatı / Girişi</h2>
+<div>
+<button onclick="showAuthTab('register')">Qeydiyyat</button>
+<button onclick="showAuthTab('login')">Giriş</button>
+</div>
+<div id="register" class="tab-content">
+<input type="text" id="regUser" placeholder="İstifadəçi adı"><br>
+<input type="password" id="regPass" placeholder="Şifrə"><br>
+<button onclick="registerUser()">Qeydiyyatdan keç</button>
+<p id="regMessage"></p>
+</div>
+<div id="login" class="tab-content">
+<input type="text" id="logUser" placeholder="İstifadəçi adı"><br>
+<input type="password" id="logPass" placeholder="Şifrə"><br>
+<button onclick="loginUser()">Daxil ol</button>
+<p id="logMessage"></p>
+</div>
+</section>
+
+<section id="dashboard" class="hidden">
+<p id="userGreeting"></p>
+<h2>Fənn Testləri</h2>
+<div class="subjects">
+<div class="card" onclick="showTest('riyaziyyat')"><img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png"><h3>Riyaziyyat</h3></div>
+<div class="card" onclick="showTest('azdili')"><img src="https://cdn-icons-png.flaticon.com/512/123/123392.png"><h3>Azərbaycan dili</h3></div>
+<div class="card" onclick="showTest('ingilis')"><img src="https://cdn-icons-png.flaticon.com/512/197/197484.png"><h3>İngilis dili</h3></div>
+<div class="card" onclick="showTest('fizika')"><img src="https://cdn-icons-png.flaticon.com/512/1995/1995545.png"><h3>Fizika</h3></div>
+<div class="card" onclick="showTest('dunyagorusu')"><img src="https://cdn-icons-png.flaticon.com/512/888/888879.png"><h3>Dünya görüşü</h3></div>
+</div>
+</section>
+
+<section id="tests" class="hidden">
+<h2 id="testTitle"></h2>
+<div id="progressBar"><div id="progress"></div></div>
+<ul id="quiz"></ul>
+<button onclick="checkQuiz()">Nəticəni gör</button>
+<p id="result"></p>
+<button onclick="backToDashboard()">Geri</button>
+</section>
+
+<script>
+// Motivasiya
+const sayings=["Öyrənmək heç vaxt gec deyil, sınamağa başla!","Bilgi gücdür, testlə sınayıb güclən!","Uğur səy göstərənlərindir!","Əzmli ol və davam et!","Yeni biliklər qazan, fərqlən!"];
+let index=0;
+setInterval(()=>{
+  document.getElementById('motivation').style.opacity=0;
+  setTimeout(()=>{
+    document.getElementById('motivation').innerText=sayings[index];
+    document.getElementById('motivation').style.opacity=1;
+    index=(index+1)%sayings.length;
+  },500);
+},4000);
+
+// Auth
+function showAuthTab(id){document.querySelectorAll('#auth .tab-content').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function registerUser(){let u=document.getElementById('regUser').value,p=document.getElementById('regPass').value;if(!u||!p){document.getElementById('regMessage').innerText="Bütün sahələri doldurun!"; return;} let users=JSON.parse(localStorage.getItem('users')||'{}');if(users[u]){document.getElementById('regMessage').innerText="İstifadəçi adı mövcuddur!"; return;} users[u]=p; localStorage.setItem('users',JSON.stringify(users));document.getElementById('regMessage').innerText="Uğurla qeydiyyatdan keçdiniz!";}
+function loginUser(){let u=document.getElementById('logUser').value,p=document.getElementById('logPass').value;let users=JSON.parse(localStorage.getItem('users')||'{}');if(users[u]&&users[u]===p){localStorage.setItem('loggedIn',u);showDashboard();} else{document.getElementById('logMessage').innerText="İstifadəçi adı və ya şifrə yalnışdır!";}}
+function showDashboard(){document.getElementById('auth').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');document.getElementById('userGreeting').innerText="Salam, "+localStorage.getItem('loggedIn');}
+
+// Testlər
+const tests={
+riyaziyyat:[{q:"2+2=?",a:"4"},{q:"5*3=?",a:"15"},{q:"10-4=?",a:"6"},{q:"9/3=?",a:"3"},{q:"7+8=?",a:"15"},{q:"12-7=?",a:"5"},{q:"3*3=?",a:"9"},{q:"15/3=?",a:"5"},{q:"8+6=?",a:"14"},{q:"9-4=?",a:"5"},{q:"11+2=?",a:"13"},{q:"6*2=?",a:"12"},{q:"18/6=?",a:"3"},{q:"7+5=?",a:"12"},{q:"10-3=?",a:"7"},{q:"4*4=?",a:"16"},{q:"20/4=?",a:"5"},{q:"9+7=?",a:"16"},{q:"8-3=?",a:"5"},{q:"6+9=?",a:"15"}],
+azdili:[{q:"‘Salam’ sözünün sinonimi hansıdır?",a:"Xoş gəldiniz"},{q:"‘Günaydın’ nə deməkdir?",a:"Sabahınız xeyir"},{q:"‘Sağ ol’ nə deməkdir?",a:"Təşəkkür"}],
+ingilis:[{q:"Hello nə deməkdir?",a:"Salam"},{q:"Thank you nə deməkdir?",a:"Təşəkkür"},{q:"Good morning nə deməkdir?",a:"Sabahınız xeyir"}],
+fizika:[{q:"Cisimlərin sürətini ölçən vahid?",a:"m/s"},{q:"Cismin kütləsini ölçən vahid?",a:"kg"}],
+dunyagorusu:[{q:"Bəşəriyyətin inkişafı üçün əsas nədir?",a:"Elm"},{q:"Ən böyük sərvət nədir?",a:"Bilik"}]
+};
+
+let currentTest="";
+function showTest(subject){
+currentTest=subject;
+document.getElementById('dashboard').classList.add('hidden');
+document.getElementById('tests').classList.remove('hidden');
+document.getElementById('testTitle').innerText=subject.charAt(0).toUpperCase()+subject.slice(1)+" Testi";
+const quiz=document.getElementById('quiz');
+quiz.innerHTML="";
+tests[subject].forEach((t,i)=>{quiz.innerHTML+=`<li id="li${i}">${i+1}. ${t.q}<br><input type="text" id="q${i}" oninput="checkAnswer(${i})"></li>`;});
+document.getElementById('result').innerText="";
+document.getElementById('progress').style.width="0%";
+}
+
+function checkAnswer(i){
+let ans=document.getElementById('q'+i).value.trim();
+let li=document.getElementById('li'+i);
+if(ans.toLowerCase()===tests[currentTest][i].a.toLowerCase()){li.classList.add('correct'); li.classList.remove('wrong');} 
+else {li.classList.add('wrong'); li.classList.remove('correct');}
+let total=tests[currentTest].length;
+let correct=document.querySelectorAll('#quiz li.correct').length;
+document.getElementById('progress').style.width=(correct/total*100)+"%";
+}
+function checkQuiz(){let score=document.querySelectorAll('#quiz li.correct').length;document.getElementById('result').innerText="Siz "+score+" sualı düzgün cavabladınız!";}
+function backToDashboard(){document.getElementById('tests').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');}
+</script>
+
+</body>
+</html>
