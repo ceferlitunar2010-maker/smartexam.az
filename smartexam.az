@@ -3,27 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartExam.az - Onlayn Test Platforması</title>
+  <title>SmartExam.az - Onlayn Test və Abunə Sistemi</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
-      background: #f0f4ff;
-      color: #222;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(180deg, #e0e7ff, #f8fafc);
+      color: #1e293b;
     }
     header {
       background: #2563eb;
       color: white;
       text-align: center;
       padding: 25px 0;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
     }
     nav {
-      background: #1e3a8a;
       display: flex;
       justify-content: center;
-      gap: 25px;
-      padding: 10px;
+      background: #1e40af;
+      padding: 12px;
+      gap: 30px;
     }
     nav a {
       color: white;
@@ -37,26 +44,25 @@
     .container {
       max-width: 900px;
       margin: 40px auto;
-      padding: 20px;
+      padding: 0 20px;
     }
     .card {
       background: white;
+      padding: 25px;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 25px;
-      margin-bottom: 30px;
-      text-align: center;
+      margin-bottom: 35px;
       transition: transform 0.3s;
     }
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
     }
     .btn {
       background: #2563eb;
       color: white;
       border: none;
+      padding: 12px 25px;
       border-radius: 8px;
-      padding: 10px 20px;
       font-size: 1rem;
       cursor: pointer;
       transition: 0.3s;
@@ -64,45 +70,44 @@
     .btn:hover {
       background: #1d4ed8;
     }
-    footer {
-      text-align: center;
-      background: #1e3a8a;
-      color: white;
-      padding: 15px;
-      margin-top: 40px;
-    }
     .question {
       font-weight: 600;
       margin-bottom: 15px;
     }
     .options label {
       display: block;
-      text-align: left;
-      margin: 6px 0;
+      margin: 8px 0;
     }
     .result {
       margin-top: 15px;
       font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      background: #1e40af;
+      color: white;
+      padding: 15px;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>SmartExam.az</h1>
-    <p>Test et, öyrən və inkişaf et!</p>
+    <p>Onlayn test et və biliklərini yoxla!</p>
   </header>
 
   <nav>
-    <a href="#">Əsas</a>
     <a href="#test">Test</a>
     <a href="#abonelik">Abunə</a>
     <a href="#elaqe">Əlaqə</a>
   </nav>
 
   <div class="container">
+    <!-- TEST KARTI -->
     <div id="test" class="card">
-      <h2>Test nümunəsi</h2>
-      <div class="question">1. Azərbaycanda paytaxt hansıdır?</div>
+      <h2>Test Nümunəsi</h2>
+      <div class="question">1. Azərbaycanın paytaxtı hansıdır?</div>
       <div class="options">
         <label><input type="radio" name="q1" value="a"> Gəncə</label>
         <label><input type="radio" name="q1" value="b"> Bakı</label>
@@ -112,11 +117,19 @@
       <div id="result" class="result"></div>
     </div>
 
+    <!-- ABUNƏ KARTI -->
     <div id="abonelik" class="card">
       <h2>Premium Abunəlik</h2>
-      <p>Sadəcə <strong>5 AZN</strong> ödəyərək bütün testlərə limitsiz giriş əldə et!</p>
-      <button class="btn" onclick="pay()">Abunə ol (5 AZN)</button>
-      <div id="payResult" class="result"></div>
+      <p><strong>5 AZN</strong> ödəyərək bütün testlərə giriş əldə et.</p>
+      <button class="btn" onclick="subscribe()">Abunə ol</button>
+      <div id="subResult" class="result"></div>
+    </div>
+
+    <!-- ƏLAQƏ -->
+    <div id="elaqe" class="card">
+      <h2>Əlaqə</h2>
+      <p>Sual və təkliflərin üçün bizimlə əlaqə saxla: <br>
+      📧 <strong>info@smartexam.az</strong></p>
     </div>
   </div>
 
@@ -126,28 +139,28 @@
 
   <script>
     function checkAnswer() {
-      const answer = document.querySelector('input[name="q1"]:checked');
-      const result = document.getElementById('result');
-      if (!answer) {
-        result.textContent = "Zəhmət olmasa cavab seçin.";
-        result.style.color = "red";
+      const ans = document.querySelector('input[name="q1"]:checked');
+      const res = document.getElementById('result');
+      if (!ans) {
+        res.textContent = "Zəhmət olmasa cavab seçin.";
+        res.style.color = "red";
         return;
       }
-      if (answer.value === "b") {
-        result.textContent = "Düzgün cavab! ✅";
-        result.style.color = "green";
+      if (ans.value === "b") {
+        res.textContent = "Düzgün cavab! ✅";
+        res.style.color = "green";
       } else {
-        result.textContent = "Yanlış cavab ❌";
-        result.style.color = "red";
+        res.textContent = "Yanlış cavab ❌";
+        res.style.color = "red";
       }
     }
 
-    function pay() {
-      const payResult = document.getElementById("payResult");
-      payResult.textContent = "Ödəniş sistemi demo rejimindədir. Pul real olaraq köçürülmür 💳";
-      payResult.style.color = "blue";
+    function subscribe() {
+      const sub = document.getElementById("subResult");
+      sub.style.color = "#2563eb";
+      sub.textContent = "Ödəniş sistemi demo rejimdədir. Real pul köçürülmür 💳";
+      alert("Demo: 5 AZN ödəniş qəbul edildi. Təşəkkürlər!");
     }
   </script>
 </body>
 </html>
-
