@@ -5,184 +5,181 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartExam.az</title>
 <style>
-*{box-sizing:border-box;}
-body{font-family:"Poppins",sans-serif;margin:0;background:#eef2ff;color:#333;}
-header{background:linear-gradient(90deg,#2563eb,#1e3a8a);color:white;text-align:center;padding:20px;}
-header h1{margin:0;} header p{margin:5px 0 0;}
-nav{background:#1e3a8a;padding:10px 20px;display:flex;justify-content:center;gap:15px;flex-wrap:wrap;}
-nav a{color:white;text-decoration:none;font-weight:500;cursor:pointer;}
-nav a:hover{color:#a5b4fc;}
-section{padding:20px;}
-h2{text-align:center;color:#1e3a8a;}
-ul{list-style:none;padding:0;}
-li{margin:10px 0;padding:10px;background:white;border-radius:8px;}
-button{padding:8px 15px;background:#2563eb;color:white;border:none;border-radius:6px;cursor:pointer;margin:5px;}
-button:hover{background:#1e3a8a;}
-input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;border-radius:6px;border:1px solid #ccc;}
-#message,#result{text-align:center;font-weight:bold;margin-top:10px;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Poppins",sans-serif;}
+body{background:linear-gradient(to right,#e0f2fe,#f0f9ff);color:#333;transition:background 1s;}
 .hidden{display:none;}
-.tab-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:15px;}
-.tab-buttons button{padding:8px 12px;}
-.tab-content{display:none;}
-.tab-content.active{display:block;}
+header{background:#2563eb;color:white;padding:40px;text-align:center;transition:background 1s;}
+header h1{font-size:3rem;margin-bottom:10px;text-shadow:2px 2px 5px rgba(0,0,0,0.2);}
+header p{font-size:1.3rem;color:#dbeafe;margin-bottom:20px;transition:opacity 1s;}
+button{padding:10px 20px;border:none;border-radius:8px;background:#facc15;color:#1e3a8a;font-weight:bold;cursor:pointer;transition:0.3s;}
+button:hover{background:#eab308;color:white;}
+.subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;justify-items:center;margin-top:20px;}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);transition:0.3s;text-decoration:none;color:#1e3a8a;cursor:pointer;transform:scale(1);}
+.card:hover{transform:scale(1.05);box-shadow:0 10px 25px rgba(0,0,0,0.2);}
+.card img{width:60px;height:60px;margin-bottom:10px;transition:transform 0.3s;}
+.card:hover img{transform:rotate(10deg);}
+input[type=text],input[type=password]{padding:10px 12px;margin:8px;width:220px;border-radius:6px;border:1px solid #ccc;}
+#tests h2{margin-bottom:15px;color:#1e3a8a;}
+ul{list-style:none;padding:0;}
+li{background:white;margin:10px 0;padding:10px;border-radius:8px;}
+#result{font-weight:bold;color:#2563eb;margin-top:15px;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>SmartExam.az</h1>
-  <p>Bilgini sına, gələcəyini formalaşdır!</p>
+<h1>SmartExam.az</h1>
+<p id="motivation">"Bilgi gücdür, testlə sınayıb güclən!"</p>
 </header>
 
-<!-- Ana Səhifə -->
-<section id="home">
-  <h2>“Elm insanı ucaldan ən böyük dəyərdir.”</h2>
-  <p>SmartExam.az — öyrənmək və testlərlə özünü sınamaq üçün mükəmməl platformadır.</p>
-</section>
-
-<!-- Qeydiyyat/Giriş -->
+<!-- Qeydiyyat / Giriş -->
 <section id="auth">
-  <div style="text-align:center;margin-bottom:10px;">
-    <button onclick="showAuthTab('register')">Qeydiyyat</button>
-    <button onclick="showAuthTab('login')">Giriş</button>
-  </div>
-  <div id="register" class="tab-content">
-    <h2>Qeydiyyat</h2>
-    <input type="text" id="regUser" placeholder="İstifadəçi adı"><br>
-    <input type="password" id="regPass" placeholder="Şifrə"><br>
-    <button onclick="registerUser()">Qeydiyyatdan keç</button>
-    <p id="regMessage"></p>
-  </div>
-  <div id="login" class="tab-content">
-    <h2>Giriş</h2>
-    <input type="text" id="logUser" placeholder="İstifadəçi adı"><br>
-    <input type="password" id="logPass" placeholder="Şifrə"><br>
-    <button onclick="loginUser()">Daxil ol</button>
-    <p id="logMessage"></p>
-  </div>
+<h2>İstifadəçi Qeydiyyatı / Girişi</h2>
+<div>
+<button onclick="showAuthTab('register')">Qeydiyyat</button>
+<button onclick="showAuthTab('login')">Giriş</button>
+</div>
+<div id="register" class="tab-content">
+<input type="text" id="regUser" placeholder="İstifadəçi adı"><br>
+<input type="password" id="regPass" placeholder="Şifrə"><br>
+<button onclick="registerUser()">Qeydiyyatdan keç</button>
+<p id="regMessage"></p>
+</div>
+<div id="login" class="tab-content">
+<input type="text" id="logUser" placeholder="İstifadəçi adı"><br>
+<input type="password" id="logPass" placeholder="Şifrə"><br>
+<button onclick="loginUser()">Daxil ol</button>
+<p id="logMessage"></p>
+</div>
 </section>
 
-<!-- Testlər tabları -->
-<section id="tests">
-  <div class="tab-buttons">
-    <button onclick="showTestTab('riyaziyyat')">Riyaziyyat</button>
-    <button onclick="showTestTab('azdili')">Azərbaycan dili</button>
-    <button onclick="showTestTab('ingilis')">İngilis dili</button>
-    <button onclick="showTestTab('fizika')">Fizika</button>
-    <button onclick="showTestTab('dunyagorusu')">Dünya görüşü</button>
-  </div>
+<!-- Dashboard -->
+<section id="dashboard" class="hidden">
+<div id="subjects">
+<h2>Fənn Testləri</h2>
+<div class="subjects">
+<div class="card" onclick="showTest('riyaziyyat')">
+<img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png">
+<h3>Riyaziyyat</h3>
+</div>
+<div class="card" onclick="showTest('azdili')">
+<img src="https://cdn-icons-png.flaticon.com/512/123/123392.png">
+<h3>Azərbaycan dili</h3>
+</div>
+<div class="card" onclick="showTest('ingilis')">
+<img src="https://cdn-icons-png.flaticon.com/512/197/197484.png">
+<h3>İngilis dili</h3>
+</div>
+<div class="card" onclick="showTest('fizika')">
+<img src="https://cdn-icons-png.flaticon.com/512/1995/1995545.png">
+<h3>Fizika</h3>
+</div>
+<div class="card" onclick="showTest('dunyagorusu')">
+<img src="https://cdn-icons-png.flaticon.com/512/888/888879.png">
+<h3>Dünya görüşü</h3>
+</div>
+</div>
+</div>
+</section>
 
-  <!-- Riyaziyyat -->
-  <div id="riyaziyyat" class="tab-content">
-    <h2>Riyaziyyat Testi</h2>
-    <ul id="quizRiyaziyyat">
-      <li><p>1. 2 + 2 = ?</p><input type="radio" name="r1" value="a">3<br><input type="radio" name="r1" value="b">4<br><input type="radio" name="r1" value="c">5<br></li>
-      <li><p>2. 5 * 3 = ?</p><input type="radio" name="r2" value="a">8<br><input type="radio" name="r2" value="b">15<br><input type="radio" name="r2" value="c">20<br></li>
-    </ul>
-    <button onclick="checkQuiz('riyaziyyat')">Nəticəni gör</button>
-    <p id="resultRiyaziyyat"></p>
-  </div>
-
-  <!-- Azərbaycan dili -->
-  <div id="azdili" class="tab-content">
-    <h2>Azərbaycan dili Testi</h2>
-    <ul id="quizAzdili">
-      <li><p>1. “Salam” sözünün sinonimi hansıdır?</p><input type="radio" name="a1" value="a">Salamdır<br><input type="radio" name="a1" value="b">Xoş gəldiniz<br><input type="radio" name="a1" value="c">Sağ ol<br></li>
-    </ul>
-    <button onclick="checkQuiz('azdili')">Nəticəni gör</button>
-    <p id="resultAzdili"></p>
-  </div>
-
-  <!-- İngilis dili -->
-  <div id="ingilis" class="tab-content">
-    <h2>İngilis dili Testi</h2>
-    <ul id="quizIngilis">
-      <li><p>1. “Hello” sözünün mənası nədir?</p><input type="radio" name="i1" value="a">Salam<br><input type="radio" name="i1" value="b">Təşəkkür<br><input type="radio" name="i1" value="c">Xahiş<br></li>
-    </ul>
-    <button onclick="checkQuiz('ingilis')">Nəticəni gör</button>
-    <p id="resultIngilis"></p>
-  </div>
-
-  <!-- Fizika -->
-  <div id="fizika" class="tab-content">
-    <h2>Fizika Testi</h2>
-    <ul id="quizFizika">
-      <li><p>1. Cisimlərin sürətini ölçən vahid hansıdır?</p><input type="radio" name="f1" value="a">m/s<br><input type="radio" name="f1" value="b">kg<br><input type="radio" name="f1" value="c">N<br></li>
-    </ul>
-    <button onclick="checkQuiz('fizika')">Nəticəni gör</button>
-    <p id="resultFizika"></p>
-  </div>
-
-  <!-- Dünya görüşü -->
-  <div id="dunyagorusu" class="tab-content">
-    <h2>Dünya Görüşü Testi</h2>
-    <ul id="quizDunya">
-      <li><p>1. Bəşəriyyətin inkişafı üçün əsas nədir?</p><input type="radio" name="d1" value="a">Elm<br><input type="radio" name="d1" value="b">Təsadüf<br><input type="radio" name="d1" value="c">Uğur<br></li>
-    </ul>
-    <button onclick="checkQuiz('dunyagorusu')">Nəticəni gör</button>
-    <p id="resultDunya"></p>
-  </div>
+<!-- Test -->
+<section id="tests" class="hidden">
+<h2 id="testTitle"></h2>
+<ul id="quiz"></ul>
+<button onclick="checkQuiz()">Nəticəni gör</button>
+<p id="result"></p>
+<button onclick="backToDashboard()">Geri</button>
 </section>
 
 <script>
-// Auth tablar
+// Motivasiya kəlamları döngü
+const sayings=[
+"Öyrənmək heç vaxt gec deyil, sınamağa başla!",
+"Bilgi gücdür, testlə sınayıb güclən!",
+"Uğur səy göstərənlərindir!",
+"Əzmli ol və davam et!",
+"Yeni biliklər qazan, fərqlən!"
+];
+let index=0;
+setInterval(()=>{
+  document.getElementById('motivation').style.opacity=0;
+  setTimeout(()=>{
+    document.getElementById('motivation').innerText=sayings[index];
+    document.getElementById('motivation').style.opacity=1;
+    index=(index+1)%sayings.length;
+  },500);
+},4000);
+
+// Auth
 function showAuthTab(id){
   document.querySelectorAll('#auth .tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
-// Test tablar
-function showTestTab(id){
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// Qeydiyyat
 function registerUser(){
-  let user=document.getElementById('regUser').value;
-  let pass=document.getElementById('regPass').value;
-  if(!user||!pass){document.getElementById('regMessage').innerText="Bütün sahələri doldurun!"; return;}
+  let u=document.getElementById('regUser').value,p=document.getElementById('regPass').value;
+  if(!u||!p){document.getElementById('regMessage').innerText="Bütün sahələri doldurun!"; return;}
   let users=JSON.parse(localStorage.getItem('users')||'{}');
-  if(users[user]){document.getElementById('regMessage').innerText="İstifadəçi adı mövcuddur!"; return;}
-  users[user]=pass;
+  if(users[u]){document.getElementById('regMessage').innerText="İstifadəçi adı mövcuddur!"; return;}
+  users[u]=p;
   localStorage.setItem('users',JSON.stringify(users));
   document.getElementById('regMessage').innerText="Uğurla qeydiyyatdan keçdiniz!";
 }
-
-// Giriş
 function loginUser(){
-  let user=document.getElementById('logUser').value;
-  let pass=document.getElementById('logPass').value;
+  let u=document.getElementById('logUser').value,p=document.getElementById('logPass').value;
   let users=JSON.parse(localStorage.getItem('users')||'{}');
-  if(users[user] && users[user]===pass){
-    localStorage.setItem('loggedIn',user);
-    document.getElementById('logMessage').innerText="Uğurla daxil oldunuz!";
-  } else {
-    document.getElementById('logMessage').innerText="İstifadəçi adı və ya şifrə yalnışdır!";
-  }
+  if(users[u]&&users[u]===p){localStorage.setItem('loggedIn',u);showDashboard();}
+  else{document.getElementById('logMessage').innerText="İstifadəçi adı və ya şifrə yalnışdır!";}
+}
+function showDashboard(){
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
 }
 
-// Test yoxlama
-function checkQuiz(testId){
-  let answers={
-    'riyaziyyat':{'r1':'b','r2':'b'},
-    'azdili':{'a1':'b'},
-    'ingilis':{'i1':'a'},
-    'fizika':{'f1':'a'},
-    'dunyagorusu':{'d1':'a'}
-  };
+// Testlər
+const tests={
+  riyaziyyat:[
+    {q:"2+2=?",a:"4"},{q:"5*3=?",a:"15"},{q:"10-4=?",a:"6"},
+    {q:"9/3=?",a:"3"},{q:"7+8=?",a:"15"}
+  ],
+  azdili:[
+    {q:"‘Salam’ sözünün sinonimi hansıdır?",a:"Xoş gəldiniz"},
+    {q:"‘Günaydın’ nə deməkdir?",a:"Sabahınız xeyir"},
+    {q:"‘Sağ ol’ nə deməkdir?",a:"Təşəkkür"}
+  ],
+  ingilis:[
+    {q:"Hello nə deməkdir?",a:"Salam"},
+    {q:"Thank you nə deməkdir?",a:"Təşəkkür"},
+    {q:"Good morning nə deməkdir?",a:"Sabahınız xeyir"}
+  ],
+  fizika:[
+    {q:"Cisimlərin sürətini ölçən vahid?",a:"m/s"},
+    {q:"Cismin kütləsini ölçən vahid?",a:"kg"}
+  ],
+  dunyagorusu:[
+    {q:"Bəşəriyyətin inkişafı üçün əsas nədir?",a:"Elm"},
+    {q:"Ən böyük sərvət nədir?",a:"Bilik"}
+  ]
+};
+let currentTest="";
+function showTest(subject){
+  currentTest=subject;
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('tests').classList.remove('hidden');
+  document.getElementById('testTitle').innerText=subject.charAt(0).toUpperCase()+subject.slice(1)+" Testi";
+  const quiz=document.getElementById('quiz');
+  quiz.innerHTML="";
+  tests[subject].forEach((t,i)=>{quiz.innerHTML+=`<li>${i+1}. ${t.q}<br><input type="text" id="q${i}"></li>`;});
+  document.getElementById('result').innerText="";
+}
+function checkQuiz(){
   let score=0;
-  for(let q in answers[testId]){
-    let elems=document.getElementsByName(q);
-    for(let e of elems){
-      if(e.checked && e.value===answers[testId][q]) score++;
-    }
-  }
-  document.getElementById('result'+capitalize(testId)).innerText="Siz "+score+" sualı düzgün cavabladınız!";
+  tests[currentTest].forEach((t,i)=>{let ans=document.getElementById('q'+i).value.trim(); if(ans.toLowerCase()===t.a.toLowerCase()) score++;});
+  document.getElementById('result').innerText="Siz "+score+" sualı düzgün cavabladınız!";
 }
-
-function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function backToDashboard(){
+  document.getElementById('tests').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+}
 </script>
-
 </body>
 </html>
