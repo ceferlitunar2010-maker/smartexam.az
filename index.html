@@ -1,1 +1,199 @@
 
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartExam.az - Onlayn Test və İmtahan Platforması</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #e0f2ff, #f8fafc);
+      color: #1e3a8a;
+    }
+    header {
+      background-color: #1e40af;
+      color: white;
+      text-align: center;
+      padding: 40px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    header p {
+      margin: 8px 0 0;
+      font-size: 1.2rem;
+      color: #dbeafe;
+    }
+    nav {
+      background: #2563eb;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    nav a:hover {
+      color: #bfdbfe;
+    }
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      color: #1e3a8a;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: #475569;
+      max-width: 600px;
+      margin: 10px auto 30px;
+    }
+    .hero button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 14px 35px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .hero button:hover {
+      background: #1e40af;
+    }
+    .subjects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 25px;
+      padding: 40px;
+    }
+    .subject-card {
+      background: white;
+      border-radius: 16px;
+      padding: 25px 15px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .subject-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
+    .subject-card h3 {
+      margin: 10px 0;
+      color: #1e3a8a;
+    }
+    .subject-card p {
+      color: #475569;
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+    .subject-card button {
+      background: #1e40af;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .subject-card button:hover {
+      background: #2563eb;
+    }
+    .premium {
+      text-align: center;
+      padding: 60px 20px;
+      background: #dbeafe;
+    }
+    .premium h2 {
+      color: #1e3a8a;
+    }
+    .premium p {
+      color: #334155;
+      font-size: 1.1rem;
+    }
+    .premium button {
+      background: #1e40af;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .premium button:hover {
+      background: #2563eb;
+    }
+    footer {
+      background-color: #1e3a8a;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 50px;
+    }
+    footer a {
+      color: #bfdbfe;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SmartExam.az</h1>
+    <p>Bilgini sına, gələcəyini formalaşdır!</p>
+  </header>
+
+  <nav>
+    <a href="#">Əsas</a>
+    <a href="#">Testlər</a>
+    <a href="#">Fənlər</a>
+    <a href="#">Premium</a>
+    <a href="#">Əlaqə</a>
+  </nav>
+
+  <section class="hero">
+    <h2>İstənilən fəndən onlayn testləri həll et!</h2>
+    <p>SmartExam.az ilə Riyaziyyatdan Dünya Görüşünə qədər bütün fənlər üzrə testləri sına, nəticəni dərhal öyrən.</p>
+    <button>Testə Başla</button>
+  </section>
+
+  <section class="subjects">
+    <div class="subject-card"><h3>Riyaziyyat</h3><p>Riyazi düşüncə gücünü yoxla.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>Azərbaycan dili</h3><p>Qrammatika və imla biliklərini ölç.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>İngilis dili</h3><p>Listening, Reading və Grammar testləri.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>Fizika</h3><p>Qanunları testlərlə öyrən.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>Kimya</h3><p>Əsas reaksiyaları testlərlə sına.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>Biologiya</h3><p>Canlı aləm biliklərini möhkəmləndir.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>Tarix</h3><p>Ən vacib hadisələri yadda saxla.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>Dünya Görüşü</h3><p>Dünya, cəmiyyət və insan haqqında testlər.</p><button>Testə bax</button></div>
+    <div class="subject-card"><h3>İnformatika</h3><p>Kompyuter biliklərini yoxla.</p><button>Testə bax</button></div>
+  </section>
+
+  <section class="premium">
+    <h2>Premium Abunəlik – Ayda cəmi 5 AZN</h2>
+    <p>Limitsiz testlər, statistika, nəticə izləmə və daha çox!</p>
+    <button>Abunə Ol</button>
+  </section>
+
+  <footer>
+    © 2025 SmartExam.az | 📧 <a href="mailto:ceferlitunar2010@gmail.com">ceferlitunar2010@gmail.com</a>
+  </footer>
+</body>
+</html>
