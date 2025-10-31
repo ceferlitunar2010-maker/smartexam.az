@@ -3,19 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EduTest.az — Demo</title>
-  <meta name="description" content="EduTest.az — onlayn testlər və nəticə analizi (demo)" />
+  <title>SmartExam.az — Demo (Test & Ödənişlə birlikdə)</title>
+  <meta name="description" content="SmartExam.az — onlayn testlər, nəticə analizi və demo ödəniş inteqrasiyası" />
   <style>
-    :root{
-      --primary:#1565c0; /* mavi */
-      --accent:#0b72b6;
-      --muted:#6b7280;
-      --bg:#f6fbff;
-      --card:#ffffff;
-      --radius:12px;
-      --shadow: 0 6px 20px rgba(16,24,40,0.08);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    }
+    :root{--primary:#1565c0;--accent:#0b72b6;--muted:#6b7280;--bg:#f6fbff;--card:#ffffff;--radius:12px;--shadow:0 6px 20px rgba(16,24,40,0.08);font-family:Inter, ui-sans-serif, system-ui, -apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:#0f172a}
     header{background:linear-gradient(90deg,var(--primary),var(--accent));color:#fff;padding:20px;border-radius:0 0 18px 18px}
@@ -24,44 +15,35 @@
     .logo{width:56px;height:56px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:700}
     h1{margin:0;font-size:20px}
     p.lead{margin:6px 0 0;color:rgba(255,255,255,0.9)}
-
     .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-    .nav{display:flex;gap:8px;flex-wrap:wrap}
     .btn{background:var(--primary);color:#fff;padding:10px 12px;border-radius:10px;border:none;cursor:pointer}
     .muted{color:var(--muted)}
-
     .subject-list{display:flex;gap:8px;flex-wrap:wrap}
     .subject{padding:10px 12px;border-radius:10px;background:#eef6ff;border:1px solid rgba(21,101,192,0.08);cursor:pointer}
     .subject.active{background:var(--primary);color:#fff}
-
     .test-list{display:flex;flex-direction:column;gap:8px}
     .test-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;border:1px solid #eef2ff}
-
-    .center{display:flex;align-items:center;justify-content:center}
-
-    /* test runner */
     .question{margin:12px 0}
     .options{display:flex;flex-direction:column;gap:8px}
     .option{padding:12px;border-radius:10px;border:1px solid #e6eefc;cursor:pointer}
     .option.selected{background:#e9f4ff;border-color:var(--primary)}
     .timer{font-weight:600;color:var(--muted)}
-
     footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px;padding:20px}
-
-    @media(max-width:880px){
-      .grid{grid-template-columns:1fr;}
-      .logo{width:44px;height:44px}
-    }
+    /* modal */
+    .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:flex;align-items:center;justify-content:center;z-index:60}
+    .modal{background:white;border-radius:12px;padding:18px;max-width:420px;width:92%;box-shadow:0 10px 40px rgba(2,6,23,0.25)}
+    .input{width:100%;padding:10px;border-radius:8px;border:1px solid #eef2ff;margin-top:8px}
+    @media(max-width:880px){.grid{grid-template-columns:1fr}.logo{width:44px;height:44px}}
   </style>
 </head>
 <body>
   <header>
     <div class="container brand">
-      <div class="logo">ET</div>
+      <div class="logo">SE</div>
       <div>
-        <h1>EduTest.az — Demo</h1>
-        <p class="lead">Onlayn testlər, nəticə analizi və premium resurslar (demo)</p>
+        <h1>SmartExam.az</h1>
+        <p class="lead">Onlayn testlər, nəticə analizi və premium resurslar — demo</p>
       </div>
     </div>
   </header>
@@ -146,238 +128,113 @@
     </div>
 
     <footer>
-      Demo sayt — bu kod sadəcə front-end nümunəsidir. Əgər backend, ödəmə və istifadəçi hesabları əlavə etmək istəyirsən, mən kömək edə bilərəm.
+      Demo sayt — bu kod front-end və demo ödəniş axınını göstərir. Real ödəniş üçün server tərəfi və ödəmə provayderi inteqrasiyası tələb olunur.
     </footer>
   </main>
 
-  <script>
-    // Demo data: suallar və testlər
-    const DB = {
-      subjects:[
-        {id:'math',name:'Riyaziyyat'},
-        {id:'aze',name:'Azərbaycan Dili'},
-        {id:'eng',name:'İngilis Dili'}
-      ],
-      tests:[
-        {id:'math-1',subject:'math',title:'Riyaziyyat: Asan test',duration:300,level:'asan',premium:false,questions:[
-          {q:'2+2 = ?',choices:['3','4','5','6'],answer:1,explain:'2 + 2 = 4'},
-          {q:'5 - 3 = ?',choices:['1','2','3','4'],answer:1,explain:'5 - 3 = 2'},
-          {q:'3 * 3 = ?',choices:['6','8','9','12'],answer:2,explain:'3 × 3 = 9'}
-        ]},
-        {id:'aze-1',subject:'aze',title:'Azərbaycan Dili: Qrammatika',duration:300,level:'orta',premium:false,questions:[
-          {q:"'Kitab' sözünün çoxluğu necədir?",choices:['Kitablar','Kitablarlar','Kitabs','Kitab-ler'],answer:0,explain:'Doğru forma: Kitablar'},
-          {q:'İstifadə olunan düzgün vurğu hansıdır?',choices:['İlk hecada','Axırıncı hecada','Orta hecada','Vurğu yoxdur'],answer:0,explain:'Azerbaycan dilində bir çox söz ilk hecada vurğulanır.'}
-        ]},
-        {id:'eng-1',subject:'eng',title:'English: Beginner',duration:300,level:'asan',premium:true,questions:[
-          {q:'What is the plural of "mouse"?',choices:['mouses','mice','mousees','meese'],answer:1,explain:'Plural of mouse is mice.'}
-        ]}
-      ]
-    }
+  <!-- Modal: Demo payment -->
+  <div id="modal" style="display:none" aria-hidden="true"></div>
 
-    // App state
-    const state = {subject:null,test:null,idx:0,answers:{},timer:null,timeLeft:0}
+  <script>
+    /* Demo DB (frontend-only) */
+    var DB = {
+      subjects:[{id:'math',name:'Riyaziyyat'},{id:'aze',name:'Azərbaycan Dili'},{id:'eng',name:'İngilis Dili'}],
+      tests:[
+        {id:'math-1',subject:'math',title:'Riyaziyyat: Asan test',duration:300,level:'asan',premium:false,questions:[{q:'2+2 = ?',choices:['3','4','5','6'],answer:1,explain:'2 + 2 = 4'},{q:'5 - 3 = ?',choices:['1','2','3','4'],answer:1,explain:'5 - 3 = 2'},{q:'3 * 3 = ?',choices:['6','8','9','12'],answer:2,explain:'3 × 3 = 9'}]},
+        {id:'aze-1',subject:'aze',title:'Azərbaycan Dili: Qrammatika',duration:300,level:'orta',premium:false,questions:[{q:"'Kitab' sözünün çoxluğu necədir?",choices:['Kitablar','Kitablarlar','Kitabs','Kitab-ler'],answer:0,explain:'Doğru forma: Kitablar'},{q:'"Mən getdim" cümləsində feil hansı zaman formasıdır?',choices:['Keçmiş zaman','İndiki zaman','Gələcək zaman','Şart kipi'],answer:0,explain:'Keçmiş zaman'}]},
+        {id:'eng-1',subject:'eng',title:'English: Beginner (Premium)',duration:300,level:'asan',premium:true,questions:[{q:'What is the plural of "mouse"?',choices:['mouses','mice','mousees','meese'],answer:1,explain:'Plural of mouse is mice.'}]}
+      ]
+    };
+
+    // State
+    var state = {subject:null,test:null,idx:0,answers:{},timer:null,timeLeft:0};
 
     // Elements
-    const subjectsEl = document.getElementById('subjects')
-    const testListEl = document.getElementById('test-list')
-    const runnerCard = document.getElementById('runner-card')
-    const testTitleEl = document.getElementById('test-title')
-    const testMetaEl = document.getElementById('test-meta')
-    const timerEl = document.getElementById('timer')
-    const questionArea = document.getElementById('question-area')
-    const resultCard = document.getElementById('result-card')
-    const resultSummary = document.getElementById('result-summary')
-    const savedResultsEl = document.getElementById('saved-results')
+    var subjectsEl = document.getElementById('subjects');
+    var testListEl = document.getElementById('test-list');
+    var runnerCard = document.getElementById('runner-card');
+    var testTitleEl = document.getElementById('test-title');
+    var testMetaEl = document.getElementById('test-meta');
+    var timerEl = document.getElementById('timer');
+    var questionArea = document.getElementById('question-area');
+    var resultCard = document.getElementById('result-card');
+    var resultSummary = document.getElementById('result-summary');
+    var savedResultsEl = document.getElementById('saved-results');
 
-    function init(){
-      renderSubjects()
-      renderTests()
-      bindUI()
-      loadSavedResults()
-    }
+    // Init
+    function init(){ renderSubjects(); renderTests(); bindUI(); loadSavedResults(); updatePremiumUI(); }
 
-    function renderSubjects(){
-      subjectsEl.innerHTML = ''
-      DB.subjects.forEach(s=>{
-        const btn = document.createElement('div')
-        btn.className='subject'
-        btn.textContent = s.name
-        btn.onclick = ()=>{ selectSubject(s.id, btn) }
-        subjectsEl.appendChild(btn)
-      })
-    }
+    function renderSubjects(){ subjectsEl.innerHTML=''; DB.subjects.forEach(function(s){ var btn=document.createElement('div'); btn.className='subject'; btn.textContent=s.name; btn.onclick=function(){ selectSubject(s.id,btn); }; subjectsEl.appendChild(btn); }); }
+    function selectSubject(id,el){ state.subject=id; document.querySelectorAll('.subject').forEach(function(x){ x.classList.remove('active'); }); el.classList.add('active'); renderTests(); }
 
-    function selectSubject(id,el){
-      state.subject = id
-      document.querySelectorAll('.subject').forEach(x=>x.classList.remove('active'))
-      el.classList.add('active')
-      renderTests()
-    }
+    function renderTests(){ testListEl.innerHTML=''; var tests = DB.tests.filter(function(t){ return state.subject? t.subject===state.subject:true; }); tests.forEach(function(t){ var div=document.createElement('div'); div.className='test-item'; var metaText = t.questions.length + ' sual · ' + Math.round(t.duration/60) + ' dəq' + (t.premium? ' · Premium':'' ); div.innerHTML = '<div><strong>'+ t.title +'</strong><div class=\"muted\">'+ metaText +'</div></div>'; var actions=document.createElement('div'); var start=document.createElement('button'); start.className='btn'; start.textContent='Başla'; start.onclick=function(){ startTest(t.id); }; actions.appendChild(start); div.appendChild(actions); testListEl.appendChild(div); }); }
 
-    function renderTests(){
-      testListEl.innerHTML = ''
-      const tests = DB.tests.filter(t=> state.subject? t.subject===state.subject:true)
-      tests.forEach(t=>{
-        const div = document.createElement('div')
-        div.className='test-item'
-        div.innerHTML = `<div><strong>${t.title}</strong><div class='muted'>${t.questions.length} sual · ${(t.duration/60).toFixed(0)} dəq ${t.premium? '· Premium':''}</div></div>`
-        const actions = document.createElement('div')
-        const start = document.createElement('button')
-        start.className='btn'
-        start.textContent='Başla'
-        start.onclick = ()=> startTest(t.id)
-        actions.appendChild(start)
-        div.appendChild(actions)
-        testListEl.appendChild(div)
-      })
-    }
-
-    function startTest(testId){
-      const t = DB.tests.find(x=>x.id===testId)
-      if (!t) return
-      if (t.premium && !isPremium()){
-        if (!confirm('Bu test premiumdur. Premium almaq istəyirsiniz?')) return
-        // in demo: simulate buy
-        buyPremium()
-        if (!isPremium()) return
+    function startTest(testId){ var t = DB.tests.find(function(x){ return x.id===testId; }); if(!t) return; if(t.premium && !isPremium()){ // prompt purchase
+        showPaymentModal(5, 'Premium abunə (1 ay)', function(){ setPremium(true); startTest(testId); });
+        return;
       }
-      state.test = t
-      state.idx = 0
-      state.answers = {}
-      state.timeLeft = t.duration
-      showRunner()
-      renderQuestion()
-      startTimer()
-    }
+      state.test=t; state.idx=0; state.answers={}; state.timeLeft=t.duration; showRunner(); renderQuestion(); startTimer(); }
 
-    function showRunner(){
-      runnerCard.hidden = false
-      resultCard.hidden = true
-      testTitleEl.textContent = state.test.title
-      testMetaEl.textContent = `${state.test.questions.length} sual · ${(state.test.duration/60).toFixed(0)} dəq` 
-    }
+    function showRunner(){ runnerCard.hidden=false; resultCard.hidden=true; testTitleEl.textContent=state.test.title; testMetaEl.textContent = state.test.questions.length + ' sual · ' + Math.round(state.test.duration/60) + ' dəq'; }
 
-    function renderQuestion(){
-      const q = state.test.questions[state.idx]
-      questionArea.innerHTML = ''
-      const elQ = document.createElement('div')
-      elQ.className='question'
-      elQ.innerHTML = `<div style='font-weight:700'>${state.idx+1}. ${q.q}</div><div class='muted' style='margin-top:6px'>Açıqlama: <span id='q-explain' class='muted' style='opacity:0.85'>${q.explain}</span></div>`
-      questionArea.appendChild(elQ)
+    function renderQuestion(){ var q = state.test.questions[state.idx]; questionArea.innerHTML=''; var elQ = document.createElement('div'); elQ.className='question'; elQ.innerHTML = '<div style=\"font-weight:700\">'+ (state.idx+1) +'. '+ q.q +'</div><div class=\"muted\" style=\"margin-top:6px\">Açıqlama: <span id=\"q-explain\" class=\"muted\" style=\"opacity:0.85\">'+ q.explain +'</span></div>';
+      questionArea.appendChild(elQ);
+      var opts = document.createElement('div'); opts.className='options'; q.choices.forEach(function(c,i){ var o=document.createElement('div'); o.className='option'; o.textContent=c; if(state.answers[state.idx]===i) o.classList.add('selected'); o.onclick=function(){ state.answers[state.idx]=i; document.querySelectorAll('.option').forEach(function(x){ x.classList.remove('selected'); }); o.classList.add('selected'); }; opts.appendChild(o); }); questionArea.appendChild(opts); }
 
-      const opts = document.createElement('div')
-      opts.className='options'
-      q.choices.forEach((c,i)=>{
-        const o = document.createElement('div')
-        o.className='option'
-        o.textContent = c
-        if (state.answers[state.idx]===i) o.classList.add('selected')
-        o.onclick = ()=>{
-          state.answers[state.idx]=i
-          document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'))
-          o.classList.add('selected')
-        }
-        opts.appendChild(o)
-      })
-      questionArea.appendChild(opts)
-    }
-
-    function nextQuestion(){
-      if (state.idx < state.test.questions.length-1){
-        state.idx++
-        renderQuestion()
-      } else {
-        endTest()
-      }
-    }
-    function prevQuestion(){
-      if (state.idx>0){ state.idx--; renderQuestion() }
-    }
-
-    function endTest(){
-      stopTimer()
-      showResult()
-    }
-
-    function showResult(){
-      runnerCard.hidden = true
-      resultCard.hidden = false
-      const total = state.test.questions.length
-      let correct=0
-      const details = []
-      state.test.questions.forEach((q,i)=>{
-        const sel = state.answers[i]
-        const ok = sel===q.answer
-        if (ok) correct++
-        details.push({q:q.q,sel: sel!=null? q.choices[sel] : 'Seçilməyib',ans:q.choices[q.answer],ok})
-      })
-      const percent = Math.round(correct/total*100)
-      resultSummary.innerHTML = `<div><strong>Sənin nəticən: ${correct}/${total} — ${percent}%</strong></div>`
-      const det = document.createElement('div')
-      det.style.marginTop='8px'
-      det.innerHTML = details.map(d=>`<div style='padding:8px;border-radius:8px;border:1px solid #f1f5f9;margin-top:6px'><div style='font-weight:600'>${d.q}</div><div class='muted'>Sənin cavab: ${d.sel} · Doğru cavab: ${d.ans}</div></div>`).join('')
-      resultSummary.appendChild(det)
-    }
-
-    function calculateScore(){
-      // already done in showResult — separated for extension
-    }
+    function nextQuestion(){ if(state.idx < state.test.questions.length-1){ state.idx++; renderQuestion(); } else { endTest(); } }
+    function prevQuestion(){ if(state.idx>0){ state.idx--; renderQuestion(); } }
+    function endTest(){ stopTimer(); showResult(); }
+    function showResult(){ runnerCard.hidden=true; resultCard.hidden=false; var total = state.test.questions.length; var correct=0; var details=[]; state.test.questions.forEach(function(q,i){ var sel = state.answers[i]; var ok = sel===q.answer; if(ok) correct++; details.push({q:q.q,sel: sel!=null? q.choices[sel] : 'Seçilməyib',ans:q.choices[q.answer],ok:ok}); }); var percent = Math.round(correct/total*100); resultSummary.innerHTML = '<div><strong>Sənin nəticən: '+correct+'/'+total+' — '+percent+'%</strong></div>'; var det = document.createElement('div'); det.style.marginTop='8px'; det.innerHTML = details.map(function(d){ return '<div style=\"padding:8px;border-radius:8px;border:1px solid #f1f5f9;margin-top:6px\"><div style=\"font-weight:600\">'+d.q+'</div><div class=\"muted\">Sənin cavab: '+d.sel+' · Doğru cavab: '+d.ans+'</div></div>'; }).join(''); resultSummary.appendChild(det); }
 
     // Timer
-    function startTimer(){
-      updateTimerDisplay()
-      state.timer = setInterval(()=>{
-        state.timeLeft--
-        if (state.timeLeft<=0){ stopTimer(); endTest(); }
-        updateTimerDisplay()
-      },1000)
-    }
-    function stopTimer(){ if (state.timer) clearInterval(state.timer); state.timer=null }
-    function updateTimerDisplay(){
-      const mm = Math.floor(state.timeLeft/60).toString().padStart(2,'0')
-      const ss = (state.timeLeft%60).toString().padStart(2,'0')
-      timerEl.textContent = mm+':'+ss
+    function startTimer(){ updateTimerDisplay(); state.timer = setInterval(function(){ state.timeLeft--; if(state.timeLeft<=0){ stopTimer(); endTest(); } updateTimerDisplay(); },1000); }
+    function stopTimer(){ if(state.timer) clearInterval(state.timer); state.timer=null; }
+    function updateTimerDisplay(){ var mm = Math.floor(state.timeLeft/60).toString().padStart(2,'0'); var ss = (state.timeLeft%60).toString().padStart(2,'0'); timerEl.textContent = mm+':'+ss; }
+
+    // Premium handling (demo)
+    function isPremium(){ return localStorage.getItem('smartexam_premium')==='1'; }
+    function setPremium(v){ localStorage.setItem('smartexam_premium', v? '1':'0'); updatePremiumUI(); }
+    function updatePremiumUI(){ var buyBtn = document.getElementById('buy-premium'); buyBtn.textContent = isPremium() ? 'Premium — aktivdir' : 'Abunə ol (5 AZN)'; buyBtn.disabled = isPremium(); }
+
+    // Demo payment modal
+    function showPaymentModal(amount,description,onSuccess){ var modalRoot = document.getElementById('modal'); var html = '<div class=\"modal-back\" role=\"dialog\" aria-modal=\"true\"><div class=\"modal\"><h3>Premium abunə — '+amount+' AZN</h3><p class=\"muted\">'+description+'</p><div style=\"margin-top:8px\"><label>Kart sahibi adı</label><input class=\"input\" id=\"card-name\" placeholder=\"Ad Soyad\" /></div><div style=\"margin-top:8px\"><label>Kart nömrəsi (demo)</label><input class=\"input\" id=\"card-num\" placeholder=\"4242 4242 4242 4242\" /></div><div style=\"display:flex;gap:8px;margin-top:12px;justify-content:flex-end\"><button id=\"modal-cancel\" style=\"background:#fff;border:1px solid var(--primary);color:var(--primary);padding:8px 12px;border-radius:8px;cursor:pointer\">İmtina</button><button id=\"modal-pay\" class=\"btn\">Demo ödəmə et</button></div><div style=\"margin-top:10px;font-size:13px;color:var(--muted)\">Qeyd: Bu demo ödənişdir — real ödəniş üçün server və ödəniş provayderi inteqrasiyası tələb olunur.</div></div></div>';
+      modalRoot.innerHTML = html; modalRoot.style.display = 'block'; document.getElementById('modal-cancel').onclick = function(){ modalRoot.style.display='none'; modalRoot.innerHTML=''; };
+      document.getElementById('modal-pay').onclick = function(){ simulatePayment(amount,description).then(function(receipt){ savePaymentRecord(receipt); modalRoot.style.display='none'; modalRoot.innerHTML=''; alert('Ödəniş uğurlu oldu (demo). Premium aktivdir.'); if(typeof onSuccess==='function') onSuccess(); }).catch(function(err){ alert('Ödəniş alınmadı: '+err); }); };
     }
 
-    // Premium (demo using localStorage)
-    function isPremium(){ return localStorage.getItem('edutest_premium')==='1'}
-    function buyPremium(){ localStorage.setItem('edutest_premium','1'); alert('Premium alındı — demo: 30 gün'); renderTests(); }
+    // Simulate payment (frontend-only)
+    function simulatePayment(amount,description){ return new Promise(function(resolve,reject){ var name = document.getElementById('card-name').value.trim(); var num = document.getElementById('card-num').value.replace(/\s+/g,''); if(!name || !num) return reject('Kart məlumatları tələb olunur'); setTimeout(function(){ var receipt = {id:'RCPT-'+Date.now(),amount:amount,description:description,time:new Date().toISOString(),method:'demo_card'}; setPremium(true); resolve(receipt); },1000); }); }
 
-    // Saved results
-    function saveResult(){
-      const saved = JSON.parse(localStorage.getItem('edutest_saved')||'[]')
-      const summary = {testId:state.test.id,title:state.test.title,correct: (Array.from(Object.keys(state.test.questions)).reduce((acc,_,i)=> acc + (state.answers[i]===state.test.questions[i].answer?1:0),0)),time: (new Date()).toISOString()}
-      saved.push(summary)
-      localStorage.setItem('edutest_saved', JSON.stringify(saved))
-      loadSavedResults()
-      alert('Nəticə saxlanıldı')
-    }
-    function loadSavedResults(){
-      const saved = JSON.parse(localStorage.getItem('edutest_saved')||'[]')
-      if (!saved.length) { savedResultsEl.textContent='Saxlanılan nəticə yoxdur'; return }
-      savedResultsEl.innerHTML = saved.map(s=>`<div style='padding:8px;border-bottom:1px solid #f1f5f9'><strong>${s.title}</strong><div class='muted'>${s.correct} doğru · ${new Date(s.time).toLocaleString()}</div></div>`).join('')
-    }
+    // Save payments locally (demo)
+    function savePaymentRecord(r){ var arr = JSON.parse(localStorage.getItem('smartexam_payments')||'[]'); arr.push(r); localStorage.setItem('smartexam_payments', JSON.stringify(arr)); }
+
+    function loadSavedResults(){ var saved = JSON.parse(localStorage.getItem('smartexam_saved')||'[]'); if(!saved.length){ savedResultsEl.textContent='Saxlanılan nəticə yoxdur'; return } savedResultsEl.innerHTML = saved.map(function(s){ return '<div style=\"padding:8px;border-bottom:1px solid #f1f5f9\"><strong>'+s.title+'</strong><div class=\"muted\">'+s.correct+' doğru · '+ new Date(s.time).toLocaleString() +'</div></div>'; }).join(''); }
+    function saveResult(){ var saved = JSON.parse(localStorage.getItem('smartexam_saved')||'[]'); var correct = state.test.questions.reduce(function(acc,q,i){ return acc + (state.answers[i]===q.answer?1:0); },0); var summary = {testId:state.test.id,title:state.test.title,correct:correct,time:(new Date()).toISOString()}; saved.push(summary); localStorage.setItem('smartexam_saved', JSON.stringify(saved)); loadSavedResults(); alert('Nəticə saxlanıldı'); }
 
     // Bind UI
-    function bindUI(){
-      document.getElementById('open-random').onclick = ()=>{
-        // start first non-premium test as quick demo
-        const t = DB.tests.find(x=>!x.premium)
-        if (t) startTest(t.id)
-      }
-      document.getElementById('next-q').onclick = nextQuestion
-      document.getElementById('prev-q').onclick = prevQuestion
-      document.getElementById('end-test').onclick = ()=>{ if (confirm('Testi bitirmək istəyirsən?')) endTest() }
-      document.getElementById('retry').onclick = ()=>{ startTest(state.test.id) }
-      document.getElementById('save-result').onclick = saveResult
-      document.getElementById('buy-premium').onclick = ()=>{ buyPremium(); alert('Demo: premium aktivdir') }
-      document.getElementById('quick-math').onclick = ()=>{ startTest('math-1') }
-      document.getElementById('quick-az').onclick = ()=>{ startTest('aze-1') }
-      document.getElementById('open-random').click()
-    }
+    function bindUI(){ document.getElementById('open-random').onclick = function(){ var t = DB.tests.find(function(x){ return !x.premium; }); if(t) startTest(t.id); };
+      document.getElementById('next-q').onclick = nextQuestion; document.getElementById('prev-q').onclick = prevQuestion; document.getElementById('end-test').onclick = function(){ if(confirm('Testi bitirmək istəyirsən?')) endTest(); };
+      document.getElementById('retry').onclick = function(){ startTest(state.test.id); };
+      document.getElementById('save-result').onclick = saveResult;
+      document.getElementById('buy-premium').onclick = function(){ showPaymentModal(5,'Premium abunə (1 ay)', function(){ alert('Premium aktivdir — demo'); }); };
+      document.getElementById('quick-math').onclick = function(){ startTest('math-1'); };
+      document.getElementById('quick-az').onclick = function(){ startTest('aze-1'); };
+      document.getElementById('open-random').click(); }
 
-    // Init app
-    init()
+    // Expose for debugging
+    window._smartexam = {DB:DB, state:state};
+
+    init();
   </script>
+
+  <!-- Integration notes (visible in file for developer) -->
+  <!--
+    Real payment integration summary (what to do on server):
+    1) Choose an Azerbaijani-compatible provider (GoldenPay, Portmanat) or Stripe Connect if available.
+    2) Create merchant account and obtain API keys.
+    3) On frontend, redirect to provider checkout or create payment token, do NOT store raw card data.
+    4) On server, verify the payment using provider webhooks and then mark user as premium in your database.
+    5) For security, store receipts and use server-side logic for granting access — do not trust frontend-only checks.
+  -->
 </body>
 </html>
