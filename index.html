@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="az">
 <head>
@@ -35,6 +34,7 @@ input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;bo
   <p>Bilgini sına, gələcəyini formalaşdır!</p>
 </header>
 
+<!-- Ana Səhifə -->
 <section id="home">
   <h2>“Elm insanı ucaldan ən böyük dəyərdir.”</h2>
   <p>SmartExam.az — öyrənmək və testlərlə özünü sınamaq üçün mükəmməl platformadır.</p>
@@ -78,7 +78,6 @@ input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;bo
     <ul id="quizRiyaziyyat">
       <li><p>1. 2 + 2 = ?</p><input type="radio" name="r1" value="a">3<br><input type="radio" name="r1" value="b">4<br><input type="radio" name="r1" value="c">5<br></li>
       <li><p>2. 5 * 3 = ?</p><input type="radio" name="r2" value="a">8<br><input type="radio" name="r2" value="b">15<br><input type="radio" name="r2" value="c">20<br></li>
-      <!-- Daha 18 sual əlavə et -->
     </ul>
     <button onclick="checkQuiz('riyaziyyat')">Nəticəni gör</button>
     <p id="resultRiyaziyyat"></p>
@@ -89,7 +88,6 @@ input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;bo
     <h2>Azərbaycan dili Testi</h2>
     <ul id="quizAzdili">
       <li><p>1. “Salam” sözünün sinonimi hansıdır?</p><input type="radio" name="a1" value="a">Salamdır<br><input type="radio" name="a1" value="b">Xoş gəldiniz<br><input type="radio" name="a1" value="c">Sağ ol<br></li>
-      <!-- Daha 19 sual əlavə et -->
     </ul>
     <button onclick="checkQuiz('azdili')">Nəticəni gör</button>
     <p id="resultAzdili"></p>
@@ -100,7 +98,6 @@ input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;bo
     <h2>İngilis dili Testi</h2>
     <ul id="quizIngilis">
       <li><p>1. “Hello” sözünün mənası nədir?</p><input type="radio" name="i1" value="a">Salam<br><input type="radio" name="i1" value="b">Təşəkkür<br><input type="radio" name="i1" value="c">Xahiş<br></li>
-      <!-- Daha 19 sual əlavə et -->
     </ul>
     <button onclick="checkQuiz('ingilis')">Nəticəni gör</button>
     <p id="resultIngilis"></p>
@@ -111,7 +108,6 @@ input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;bo
     <h2>Fizika Testi</h2>
     <ul id="quizFizika">
       <li><p>1. Cisimlərin sürətini ölçən vahid hansıdır?</p><input type="radio" name="f1" value="a">m/s<br><input type="radio" name="f1" value="b">kg<br><input type="radio" name="f1" value="c">N<br></li>
-      <!-- Daha 19 sual əlavə et -->
     </ul>
     <button onclick="checkQuiz('fizika')">Nəticəni gör</button>
     <p id="resultFizika"></p>
@@ -122,7 +118,6 @@ input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;bo
     <h2>Dünya Görüşü Testi</h2>
     <ul id="quizDunya">
       <li><p>1. Bəşəriyyətin inkişafı üçün əsas nədir?</p><input type="radio" name="d1" value="a">Elm<br><input type="radio" name="d1" value="b">Təsadüf<br><input type="radio" name="d1" value="c">Uğur<br></li>
-      <!-- Daha 19 sual əlavə et -->
     </ul>
     <button onclick="checkQuiz('dunyagorusu')">Nəticəni gör</button>
     <p id="resultDunya"></p>
@@ -130,17 +125,15 @@ input[type=text],input[type=password]{padding:8px 12px;margin:5px;width:200px;bo
 </section>
 
 <script>
-// Tablar funksiyası
-function showTestTab(id){
-  const tabs=document.querySelectorAll('.tab-content');
-  tabs.forEach(t=>t.classList.remove('active'));
+// Auth tablar
+function showAuthTab(id){
+  document.querySelectorAll('#auth .tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// Auth tabları
-function showAuthTab(id){
-  const tabs=document.querySelectorAll('#auth .tab-content');
-  tabs.forEach(t=>t.classList.remove('active'));
+// Test tablar
+function showTestTab(id){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
@@ -148,9 +141,9 @@ function showAuthTab(id){
 function registerUser(){
   let user=document.getElementById('regUser').value;
   let pass=document.getElementById('regPass').value;
-  if(user==''||pass==''){document.getElementById('regMessage').innerText="Bütün sahələri doldurun!"; return;}
+  if(!user||!pass){document.getElementById('regMessage').innerText="Bütün sahələri doldurun!"; return;}
   let users=JSON.parse(localStorage.getItem('users')||'{}');
-  if(users[user]){document.getElementById('regMessage').innerText="İstifadəçi adı mövcuddur!";return;}
+  if(users[user]){document.getElementById('regMessage').innerText="İstifadəçi adı mövcuddur!"; return;}
   users[user]=pass;
   localStorage.setItem('users',JSON.stringify(users));
   document.getElementById('regMessage').innerText="Uğurla qeydiyyatdan keçdiniz!";
@@ -169,7 +162,7 @@ function loginUser(){
   }
 }
 
-// Test yoxlama funksiyası
+// Test yoxlama
 function checkQuiz(testId){
   let answers={
     'riyaziyyat':{'r1':'b','r2':'b'},
