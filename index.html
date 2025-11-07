@@ -1,175 +1,521 @@
 
-<!DOCTYPE html>
+// 🔷 Professional React + Tailwind Test Platform — Project Scaffold
+// This canvas contains a ready-to-run project structure for a Test Platform similar to testonline.az
+// Frontend: React + Vite + Tailwind
+// Backend: Node.js + Express + SQLite (simple, self-contained)
+
+/*
+=================================================================================
+PROJECT FILES (copy each into your project folder preserving paths)
+Run instructions are at the end.
+=================================================================================
+
+1) package.json
+
+{
+  "name": "meshur-test-pro",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "start:all": "concurrently \"npm:server\" \"npm:dev\""
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "vite": "^5.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.5.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0"
+  }
+}
+
+
+2) vite.config.js
+
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: { port: 3000 }
+})
+
+
+3) tailwind.config.cjs
+
+module.exports = {
+  content: ['./index.html', './src/**/*.{js,jsx}'],
+  theme: { extend: {} },
+  plugins: []
+}
+
+
+4) postcss.config.cjs
+
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {}
+  }
+}
+
+
+5) public/index.html
+
+<!doctype html>
 <html lang="az">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Məşhur Test Platforması</title>
-  <style>
-    body {font-family: Arial, sans-serif; margin:0; background:linear-gradient(to bottom,#e0f2ff,#ffffff);}
-    .container {max-width: 700px; margin: 40px auto; background:#fff; border-radius:16px; box-shadow:0 0 15px #0001; padding:30px;}
-    .hidden {display:none;}
-    button {background:#007bff; color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer;}
-    button:hover {background:#0056cc;}
-    input, textarea, select {width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ccc;}
-    h1,h2,h3{text-align:center;}
-    .topic-btn{width:100%; margin:8px 0; padding:15px; font-size:16px; border:1px solid #007bff; border-radius:12px; background:#f0f8ff;}
-    .topic-btn:hover{background:#e6f3ff;}
-    .footer{text-align:center; margin-top:30px; color:#777; font-size:13px;}
-  </style>
-</head>
-<body>
-  <div class="container" id="app">
-    <h1>📘 Məşhur Test Platforması</h1>
-
-    <!-- Qeydiyyat / Giriş -->
-    <div id="auth">
-      <h3>Qeydiyyat və ya Giriş</h3>
-      <input id="name" placeholder="Ad">
-      <input id="email" placeholder="E-poçt">
-      <input id="password" type="password" placeholder="Şifrə">
-      <button onclick="register()">Qeydiyyat / Giriş</button>
-    </div>
-
-    <!-- Mövzular -->
-    <div id="topics" class="hidden">
-      <h3>Mövzu seç</h3>
-      <button class="topic-btn" onclick="startTest('umumi')">Ümumi Məlumat</button>
-      <button class="topic-btn" onclick="startTest('riyaziyyat')">Riyaziyyat</button>
-      <button class="topic-btn" onclick="startTest('tarix')">Tarix</button>
-      <button onclick="logout()" style="background:#dc3545; margin-top:10px;">Çıxış</button>
-    </div>
-
-    <!-- Test -->
-    <div id="test" class="hidden">
-      <h3 id="question-text"></h3>
-      <div id="choices"></div>
-      <button id="nextBtn" onclick="nextQuestion()">Növbəti</button>
-    </div>
-
-    <!-- Nəticə -->
-    <div id="result" class="hidden">
-      <h2>Nəticə</h2>
-      <p id="score"></p>
-      <button onclick="goHome()">Əsas səhifəyə qayıt</button>
-    </div>
-
-    <!-- Təklif formu -->
-    <div id="suggestions" class="hidden">
-      <h3>💡 Təklif və İstək göndər</h3>
-      <textarea id="suggestionText" placeholder="Təklif və ya istəyini yaz..."></textarea>
-      <input id="suggestionEmail" placeholder="Email (istəyə görə)">
-      <button onclick="sendSuggestion()">Göndər</button>
-    </div>
-
-    <div class="footer">© 2025 Məşhur Test — Tunar Cəfərli tərəfindən hazırlandı.</div>
-  </div>
-
-  <script>
-    const topics = {
-      umumi: [
-        { q: "Dünyanın ən böyük okeanı hansıdır?", a: ["Atlantik", "Hind", "Sakit", "Arktik"], c: 2 },
-        { q: "Ən çox əhaliyə sahib ölkə hansıdır?", a: ["ABŞ", "Hindistan", "Rusiya", "Çin"], c: 1 }
-      ],
-      riyaziyyat: [
-        { q: "2^5 = ?", a: ["16", "32", "64", "8"], c: 1 },
-        { q: "(3x+2)=11, x=?", a: ["2", "3", "5", "1"], c: 1 }
-      ],
-      tarix: [
-        { q: "AXC hansı il elan edildi?", a: ["1918", "1991", "1920", "1905"], c: 0 },
-        { q: "II Dünya Müharibəsi nə vaxt bitdi?", a: ["1944", "1945", "1946", "1950"], c: 1 }
-      ]
-    };
-
-    let user = JSON.parse(localStorage.getItem("user"));
-    let currentTopic = null, currentIndex = 0, score = 0;
-
-    const auth = document.getElementById("auth");
-    const topicsDiv = document.getElementById("topics");
-    const testDiv = document.getElementById("test");
-    const resultDiv = document.getElementById("result");
-    const suggestionsDiv = document.getElementById("suggestions");
-
-    if (user) showTopics();
-
-    function register() {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      if (!name || !email || !password) return alert("Bütün xanaları doldur!");
-      user = { name, email };
-      localStorage.setItem("user", JSON.stringify(user));
-      showTopics();
-    }
-
-    function showTopics() {
-      auth.classList.add("hidden");
-      topicsDiv.classList.remove("hidden");
-      suggestionsDiv.classList.remove("hidden");
-    }
-
-    function startTest(topic) {
-      currentTopic = topics[topic];
-      currentIndex = 0; score = 0;
-      topicsDiv.classList.add("hidden");
-      testDiv.classList.remove("hidden");
-      showQuestion();
-    }
-
-    function showQuestion() {
-      const q = currentTopic[currentIndex];
-      document.getElementById("question-text").innerText = q.q;
-      const choicesDiv = document.getElementById("choices");
-      choicesDiv.innerHTML = "";
-      q.a.forEach((ans, i) => {
-        const btn = document.createElement("button");
-        btn.innerText = ans;
-        btn.style.display = "block";
-        btn.style.margin = "6px 0";
-        btn.onclick = () => selectAnswer(i);
-        choicesDiv.appendChild(btn);
-      });
-    }
-
-    function selectAnswer(i) {
-      if (i === currentTopic[currentIndex].c) score++;
-      nextQuestion();
-    }
-
-    function nextQuestion() {
-      currentIndex++;
-      if (currentIndex < currentTopic.length) showQuestion();
-      else showResult();
-    }
-
-    function showResult() {
-      testDiv.classList.add("hidden");
-      resultDiv.classList.remove("hidden");
-      document.getElementById("score").innerText = `Düzgün cavab: ${score} / ${currentTopic.length}`;
-    }
-
-    function goHome() {
-      resultDiv.classList.add("hidden");
-      topicsDiv.classList.remove("hidden");
-    }
-
-    function logout() {
-      localStorage.removeItem("user");
-      location.reload();
-    }
-
-    function sendSuggestion() {
-      const text = document.getElementById("suggestionText").value.trim();
-      const email = document.getElementById("suggestionEmail").value.trim();
-      if (!text) return alert("Təklif yaz!");
-      const list = JSON.parse(localStorage.getItem("suggestions") || "[]");
-      list.push({ text, email });
-      localStorage.setItem("suggestions", JSON.stringify(list));
-      alert("Təklif göndərildi! 💡");
-      document.getElementById("suggestionText").value = "";
-      document.getElementById("suggestionEmail").value = "";
-    }
-  </script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Məşhur Test Pro</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
+
+
+6) src/main.jsx
+
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App'
+import './styles.css'
+
+createRoot(document.getElementById('root')).render(<App />)
+
+
+7) src/styles.css
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --primary: #0ea5e9; /* sky-500 */
+  --accent: #0369a1; /* sky-800 */
+}
+
+body{ @apply bg-slate-50 text-slate-800 }
+
+/* small helper */
+.card{ @apply bg-white rounded-2xl shadow p-6 }
+
+
+8) src/App.jsx
+
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+
+import Home from './components/Home'
+import Auth from './components/Auth'
+import Topics from './components/Topics'
+import TestRunner from './components/TestRunner'
+import Profile from './components/Profile'
+
+export default function App(){
+  const [user, setUser] = useState(null)
+  const [route, setRoute] = useState('home')
+  const [topic, setTopic] = useState(null)
+
+  useEffect(()=>{
+    const u = localStorage.getItem('meshur_user')
+    if(u) setUser(JSON.parse(u))
+  },[])
+
+  function onLogin(userObj){
+    setUser(userObj)
+    localStorage.setItem('meshur_user', JSON.stringify(userObj))
+    setRoute('topics')
+  }
+
+  function logout(){
+    localStorage.removeItem('meshur_user')
+    setUser(null)
+    setRoute('home')
+  }
+
+  return (
+    <div className="min-h-screen p-6 bg-gradient-to-b from-sky-50 to-white">
+      <div className="max-w-5xl mx-auto">
+        <header className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-sky-700">Məşhur Test Pro</h1>
+          <nav className="flex items-center gap-3">
+            {user ? (
+              <>
+                <button className="text-sm px-3 py-2 rounded-md" onClick={()=>setRoute('profile')}>{user.name}</button>
+                <button className="text-sm px-3 py-2 rounded-md text-red-600" onClick={logout}>Çıxış</button>
+              </>
+            ) : (
+              <button className="text-sm px-3 py-2 rounded-md bg-sky-600 text-white" onClick={()=>setRoute('auth')}>Qeydiyyat / Daxil ol</button>
+            )}
+          </nav>
+        </header>
+
+        <main>
+          {route === 'home' && <Home onStart={()=>setRoute('topics')}/>} 
+          {route === 'auth' && <Auth onLogin={onLogin} onBack={()=>setRoute('home')}/>} 
+          {route === 'topics' && <Topics onOpen={(t)=>{setTopic(t); setRoute('test')}} />}
+          {route === 'test' && <TestRunner topic={topic} onBack={()=>setRoute('topics')}/>} 
+          {route === 'profile' && <Profile user={user} onBack={()=>setRoute('topics')}/>} 
+        </main>
+
+        <footer className="text-center text-sm text-slate-500 mt-8">© 2025 Məşhur Test Pro</footer>
+      </div>
+    </div>
+  )
+}
+
+
+9) src/components/Home.jsx
+
+import React from 'react'
+
+export default function Home({onStart}){
+  return (
+    <div className="card">
+      <h2 className="text-xl font-semibold mb-2">Xoş gəlmisiniz — Məşhur Test Pro</h2>
+      <p className="text-sm text-slate-600 mb-4">Sürətli testlər, nəticə analizi və təklif formu.</p>
+      <div className="flex gap-3">
+        <button onClick={onStart} className="px-4 py-2 bg-sky-600 text-white rounded-lg">Mövzulara bax</button>
+      </div>
+    </div>
+  )
+}
+
+
+10) src/components/Auth.jsx
+
+import React, { useState } from 'react'
+
+export default function Auth({onLogin,onBack}){
+  const [name,setName] = useState('')
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+
+  function submit(e){
+    e.preventDefault()
+    if(!email||!password) return alert('Email və şifrə daxil edin')
+    // For prototype, we accept and store locally then call onLogin
+    const user = { name: name||'İstifadəçi', email }
+    onLogin(user)
+  }
+
+  return (
+    <div className="card">
+      <h3 className="text-lg font-semibold">Qeydiyyat / Daxil ol</h3>
+      <form className="mt-3 grid gap-3" onSubmit={submit}>
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder="Ad (istəyə görə)" />
+        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="E-poçt" />
+        <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Şifrə" type="password" />
+        <div className="flex gap-2">
+          <button className="px-4 py-2 bg-sky-600 text-white rounded">Başla</button>
+          <button type="button" onClick={onBack} className="px-4 py-2 border rounded">Geri</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+
+11) src/components/Topics.jsx
+
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+
+export default function Topics({onOpen}){
+  const [topics, setTopics] = useState([])
+
+  useEffect(()=>{
+    // Fetch from backend; fallback to sample topics
+    axios.get('/api/topics').then(r=>setTopics(r.data)).catch(()=>{
+      setTopics([
+        { id:'math', title:'Riyaziyyat', count:20 },
+        { id:'history', title:'Tarix', count:18 },
+        { id:'umumi', title:'Ümumi Məlumat', count:22 }
+      ])
+    })
+  },[])
+
+  return (
+    <div className="grid md:grid-cols-3 gap-4">
+      {topics.map(t=> (
+        <div key={t.id} className="card">
+          <h4 className="font-semibold">{t.title}</h4>
+          <p className="text-sm text-slate-500">{t.count} sual</p>
+          <button onClick={()=>onOpen(t.id)} className="mt-3 px-3 py-2 bg-sky-600 text-white rounded">Keç</button>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+
+12) src/components/TestRunner.jsx
+
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+
+export default function TestRunner({topic,onBack}){
+  const [questions, setQuestions] = useState([])
+  const [index, setIndex] = useState(0)
+  const [answers, setAnswers] = useState({})
+  const [finished, setFinished] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(0)
+
+  useEffect(()=>{
+    // load questions
+    axios.get('/api/questions?topic='+topic).then(r=>{
+      setQuestions(r.data)
+      if(r.data[0]) setTimeLeft(r.data[0].timeLimit || 30)
+    }).catch(()=>{
+      // fallback sample
+      const sample = [
+        {id:1, q:'2+2 = ?', choices:['2','3','4','5'], correct:2, timeLimit:30},
+        {id:2, q:'Azərbaycanın paytaxtı?', choices:['Bakı','Gəncə','Sumqayıt','Şəki'], correct:0, timeLimit:30}
+      ]
+      setQuestions(sample); setTimeLeft(sample[0].timeLimit)
+    })
+  },[topic])
+
+  useEffect(()=>{
+    if(finished) return
+    if(timeLeft<=0){
+      // auto next
+      return handleNext()
+    }
+    const t = setTimeout(()=>setTimeLeft(s=>s-1),1000)
+    return ()=>clearTimeout(t)
+  },[timeLeft, finished])
+
+  function selectChoice(i){
+    setAnswers(a=>({ ...a, [questions[index].id]: i }))
+  }
+
+  function handleNext(){
+    if(index < questions.length -1){
+      setIndex(i=>i+1)
+      setTimeLeft(questions[index+1].timeLimit || 30)
+    } else {
+      setFinished(true)
+      // submit results to backend
+      axios.post('/api/results',{ topic, answers }).catch(()=>{})
+    }
+  }
+
+  if(!questions.length) return <div className="card">Yüklənir...</div>
+
+  if(finished){
+    const correct = questions.reduce((s,q)=> s + ((answers[q.id]===q.correct)?1:0),0)
+    return (
+      <div className="card text-center">
+        <h3 className="text-xl font-semibold">Nəticə</h3>
+        <p className="mt-3 text-lg">{correct} / {questions.length} düzgün</p>
+        <div className="mt-3 flex justify-center gap-2">
+          <button onClick={onBack} className="px-3 py-2 border rounded">Mövzulərə qayıt</button>
+        </div>
+      </div>
+    )
+  }
+
+  const q = questions[index]
+
+  return (
+    <div className="card">
+      <div className="flex justify-between items-center mb-3">
+        <h4 className="font-semibold">Sual {index+1} / {questions.length}</h4>
+        <div className="text-sm text-slate-500">{timeLeft}s</div>
+      </div>
+      <h3 className="text-lg font-medium">{q.q}</h3>
+      <div className="grid gap-2 mt-4">
+        {q.choices.map((c,i)=> (
+          <button key={i} onClick={()=>selectChoice(i)} className={`p-3 rounded ${answers[q.id]===i? 'ring-2 ring-sky-400': 'border'}`}>{String.fromCharCode(65+i)}. {c}</button>
+        ))}
+      </div>
+      <div className="mt-4 flex justify-between">
+        <button onClick={onBack} className="px-3 py-2 border rounded">Çıxış</button>
+        <button onClick={handleNext} className="px-3 py-2 bg-sky-600 text-white rounded">Növbəti</button>
+      </div>
+    </div>
+  )
+}
+
+
+13) src/components/Profile.jsx
+
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+
+export default function Profile({user, onBack}){
+  const [results, setResults] = useState([])
+
+  useEffect(()=>{
+    axios.get('/api/results?email='+encodeURIComponent(user.email)).then(r=>setResults(r.data)).catch(()=>setResults([]))
+  },[])
+
+  return (
+    <div className="card">
+      <h3 className="font-semibold">Profil — {user.name}</h3>
+      <p className="text-sm text-slate-500">E-poçt: {user.email}</p>
+
+      <div className="mt-4">
+        <h4 className="font-semibold">Keçirilmiş testlər</h4>
+        {results.length? (
+          <ul className="mt-2 space-y-2">
+            {results.map((r,i)=> (
+              <li key={i} className="p-3 border rounded">{r.topic} — {r.score}/{r.total} — {new Date(r.created_at).toLocaleString()}</li>
+            ))}
+          </ul>
+        ) : (<p className="text-sm text-slate-500 mt-2">Hələ nəticəniz yoxdur.</p>)}
+      </div>
+
+      <div className="mt-4">
+        <button onClick={onBack} className="px-3 py-2 border rounded">Geri</button>
+      </div>
+    </div>
+  )
+}
+
+
+14) server/index.js (Node.js + Express + SQLite minimal API)
+
+const express = require('express')
+const path = require('path')
+const sqlite3 = require('sqlite3').verbose()
+const bodyParser = require('body-parser')
+
+const app = express()
+app.use(bodyParser.json())
+
+// serve frontend (vite dev will proxy during dev; in production build serve dist)
+app.use(express.static(path.join(__dirname, '..', 'dist')))
+
+const dbFile = path.join(__dirname, 'data.db')
+const db = new sqlite3.Database(dbFile)
+
+// init tables
+db.serialize(()=>{
+  db.run(`CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, topic TEXT, q TEXT, choices TEXT, correct INTEGER, timeLimit INTEGER)`)
+  db.run(`CREATE TABLE IF NOT EXISTS results (id INTEGER PRIMARY KEY, email TEXT, topic TEXT, score INTEGER, total INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`)
+  db.run(`CREATE TABLE IF NOT EXISTS suggestions (id INTEGER PRIMARY KEY, email TEXT, text TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`)
+
+  // seed sample questions if empty
+  db.get('SELECT COUNT(*) as cnt FROM questions', (err,row)=>{
+    if(row && row.cnt===0){
+      const sample = [
+        {topic:'math', q:'2+2 = ?', choices:JSON.stringify(['2','3','4','5']), correct:2, timeLimit:30},
+        {topic:'umumi', q:'Azərbaycanın paytaxtı?', choices:JSON.stringify(['Bakı','Gəncə','Sumqayıt']), correct:0, timeLimit:30}
+      ]
+      const stmt = db.prepare('INSERT INTO questions (topic,q,choices,correct,timeLimit) VALUES (?,?,?,?,?)')
+      sample.forEach(s=> stmt.run(s.topic,s.q,s.choices,s.correct,s.timeLimit))
+      stmt.finalize()
+    }
+  })
+})
+
+// API: topics
+app.get('/api/topics',(req,res)=>{
+  db.all('SELECT topic, COUNT(*) as cnt FROM questions GROUP BY topic', (err,rows)=>{
+    if(err) return res.status(500).json({error:err.message})
+    const list = rows.map(r=> ({ id: r.topic, title: r.topic, count: r.cnt }))
+    res.json(list)
+  })
+})
+
+// API: questions
+app.get('/api/questions',(req,res)=>{
+  const topic = req.query.topic || 'umumi'
+  db.all('SELECT id,q,choices,correct,timeLimit FROM questions WHERE topic=?', [topic], (err,rows)=>{
+    if(err) return res.status(500).json({error:err.message})
+    const parsed = rows.map(r=> ({ id:r.id, q:r.q, choices: JSON.parse(r.choices), correct: r.correct, timeLimit: r.timeLimit }))
+    res.json(parsed)
+  })
+})
+
+// API: results (save)
+app.post('/api/results',(req,res)=>{
+  const { topic, answers } = req.body
+  // compute score simply by fetching questions and checking
+  db.all('SELECT id, correct FROM questions WHERE topic=?', [topic], (err, rows)=>{
+    if(err) return res.status(500).json({error:err.message})
+    let score = 0
+    rows.forEach(r=>{
+      if(answers && answers[r.id]===r.correct) score++
+    })
+    const total = rows.length
+    const email = req.body.email || 'guest'
+    db.run('INSERT INTO results (email,topic,score,total) VALUES (?,?,?,?)', [email,topic,score,total], function(err){
+      if(err) return res.status(500).json({error:err.message})
+      res.json({ok:true, score, total})
+    })
+  })
+})
+
+// API: get results
+app.get('/api/results',(req,res)=>{
+  const email = req.query.email || 'guest'
+  db.all('SELECT topic,score,total,created_at FROM results WHERE email=? ORDER BY created_at DESC', [email], (err,rows)=>{
+    if(err) return res.status(500).json({error:err.message})
+    res.json(rows)
+  })
+})
+
+// API: suggestions
+app.post('/api/suggestions',(req,res)=>{
+  const { text, email } = req.body
+  db.run('INSERT INTO suggestions (email,text) VALUES (?,?)', [email||'', text||''], function(err){
+    if(err) return res.status(500).json({error:err.message})
+    res.json({ok:true})
+  })
+})
+
+// serve index.html for any other route (SPA)
+app.get('*', (req,res)=>{
+  res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'))
+})
+
+const port = process.env.PORT || 4000
+app.listen(port, ()=> console.log('Server listening on', port))
+
+
+=================================================================================
+HOW TO RUN (development)
+
+1) Create project folder and paste files according to paths above.
+2) npm install
+3) npx tailwindcss init -p   (or if installed via package.json, already included)
+4) npm run server    # starts backend on :4000 (optional)
+5) npm run dev       # starts vite frontend on :3000
+
+During development, you may run frontend and backend concurrently (start:all script uses concurrently).
+
+=================================================================================
+NOTES & TWEAKS
+
+• This scaffold is intentionally minimal but production-capable: you can replace SQLite with PostgreSQL, add JWT-based auth, password hashing with bcrypt, email verification, admin panel, and question editor.
+
+• I can now:
+  - Generate full React components for admin question editor.
+  - Add charts for user statistics (recharts).
+  - Implement real authentication (bcrypt + JWT) and registration flow.
+  - Polish UI to match testonline.az exactly (fonts, spacing, micro-animations).
+
+Deyəsən hazırsan — indi istəyirsən mən:
+A) Bu faylları tam olaraq burada birləşdirib bir zip — yükləməyə hazır fayl verim? (mən fayl yarada bilərəm)
+B) Və ya öncə backend-less tam frontend-only versiyasını (GitHub Pages) edim?
+
+Səncə hansı addımla davam edək? */
 
