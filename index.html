@@ -1,1 +1,175 @@
 
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Məşhur Test Platforması</title>
+  <style>
+    body {font-family: Arial, sans-serif; margin:0; background:linear-gradient(to bottom,#e0f2ff,#ffffff);}
+    .container {max-width: 700px; margin: 40px auto; background:#fff; border-radius:16px; box-shadow:0 0 15px #0001; padding:30px;}
+    .hidden {display:none;}
+    button {background:#007bff; color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer;}
+    button:hover {background:#0056cc;}
+    input, textarea, select {width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ccc;}
+    h1,h2,h3{text-align:center;}
+    .topic-btn{width:100%; margin:8px 0; padding:15px; font-size:16px; border:1px solid #007bff; border-radius:12px; background:#f0f8ff;}
+    .topic-btn:hover{background:#e6f3ff;}
+    .footer{text-align:center; margin-top:30px; color:#777; font-size:13px;}
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <h1>📘 Məşhur Test Platforması</h1>
+
+    <!-- Qeydiyyat / Giriş -->
+    <div id="auth">
+      <h3>Qeydiyyat və ya Giriş</h3>
+      <input id="name" placeholder="Ad">
+      <input id="email" placeholder="E-poçt">
+      <input id="password" type="password" placeholder="Şifrə">
+      <button onclick="register()">Qeydiyyat / Giriş</button>
+    </div>
+
+    <!-- Mövzular -->
+    <div id="topics" class="hidden">
+      <h3>Mövzu seç</h3>
+      <button class="topic-btn" onclick="startTest('umumi')">Ümumi Məlumat</button>
+      <button class="topic-btn" onclick="startTest('riyaziyyat')">Riyaziyyat</button>
+      <button class="topic-btn" onclick="startTest('tarix')">Tarix</button>
+      <button onclick="logout()" style="background:#dc3545; margin-top:10px;">Çıxış</button>
+    </div>
+
+    <!-- Test -->
+    <div id="test" class="hidden">
+      <h3 id="question-text"></h3>
+      <div id="choices"></div>
+      <button id="nextBtn" onclick="nextQuestion()">Növbəti</button>
+    </div>
+
+    <!-- Nəticə -->
+    <div id="result" class="hidden">
+      <h2>Nəticə</h2>
+      <p id="score"></p>
+      <button onclick="goHome()">Əsas səhifəyə qayıt</button>
+    </div>
+
+    <!-- Təklif formu -->
+    <div id="suggestions" class="hidden">
+      <h3>💡 Təklif və İstək göndər</h3>
+      <textarea id="suggestionText" placeholder="Təklif və ya istəyini yaz..."></textarea>
+      <input id="suggestionEmail" placeholder="Email (istəyə görə)">
+      <button onclick="sendSuggestion()">Göndər</button>
+    </div>
+
+    <div class="footer">© 2025 Məşhur Test — Tunar Cəfərli tərəfindən hazırlandı.</div>
+  </div>
+
+  <script>
+    const topics = {
+      umumi: [
+        { q: "Dünyanın ən böyük okeanı hansıdır?", a: ["Atlantik", "Hind", "Sakit", "Arktik"], c: 2 },
+        { q: "Ən çox əhaliyə sahib ölkə hansıdır?", a: ["ABŞ", "Hindistan", "Rusiya", "Çin"], c: 1 }
+      ],
+      riyaziyyat: [
+        { q: "2^5 = ?", a: ["16", "32", "64", "8"], c: 1 },
+        { q: "(3x+2)=11, x=?", a: ["2", "3", "5", "1"], c: 1 }
+      ],
+      tarix: [
+        { q: "AXC hansı il elan edildi?", a: ["1918", "1991", "1920", "1905"], c: 0 },
+        { q: "II Dünya Müharibəsi nə vaxt bitdi?", a: ["1944", "1945", "1946", "1950"], c: 1 }
+      ]
+    };
+
+    let user = JSON.parse(localStorage.getItem("user"));
+    let currentTopic = null, currentIndex = 0, score = 0;
+
+    const auth = document.getElementById("auth");
+    const topicsDiv = document.getElementById("topics");
+    const testDiv = document.getElementById("test");
+    const resultDiv = document.getElementById("result");
+    const suggestionsDiv = document.getElementById("suggestions");
+
+    if (user) showTopics();
+
+    function register() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!name || !email || !password) return alert("Bütün xanaları doldur!");
+      user = { name, email };
+      localStorage.setItem("user", JSON.stringify(user));
+      showTopics();
+    }
+
+    function showTopics() {
+      auth.classList.add("hidden");
+      topicsDiv.classList.remove("hidden");
+      suggestionsDiv.classList.remove("hidden");
+    }
+
+    function startTest(topic) {
+      currentTopic = topics[topic];
+      currentIndex = 0; score = 0;
+      topicsDiv.classList.add("hidden");
+      testDiv.classList.remove("hidden");
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = currentTopic[currentIndex];
+      document.getElementById("question-text").innerText = q.q;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+      q.a.forEach((ans, i) => {
+        const btn = document.createElement("button");
+        btn.innerText = ans;
+        btn.style.display = "block";
+        btn.style.margin = "6px 0";
+        btn.onclick = () => selectAnswer(i);
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(i) {
+      if (i === currentTopic[currentIndex].c) score++;
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < currentTopic.length) showQuestion();
+      else showResult();
+    }
+
+    function showResult() {
+      testDiv.classList.add("hidden");
+      resultDiv.classList.remove("hidden");
+      document.getElementById("score").innerText = `Düzgün cavab: ${score} / ${currentTopic.length}`;
+    }
+
+    function goHome() {
+      resultDiv.classList.add("hidden");
+      topicsDiv.classList.remove("hidden");
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      location.reload();
+    }
+
+    function sendSuggestion() {
+      const text = document.getElementById("suggestionText").value.trim();
+      const email = document.getElementById("suggestionEmail").value.trim();
+      if (!text) return alert("Təklif yaz!");
+      const list = JSON.parse(localStorage.getItem("suggestions") || "[]");
+      list.push({ text, email });
+      localStorage.setItem("suggestions", JSON.stringify(list));
+      alert("Təklif göndərildi! 💡");
+      document.getElementById("suggestionText").value = "";
+      document.getElementById("suggestionEmail").value = "";
+    }
+  </script>
+</body>
+</html>
+
